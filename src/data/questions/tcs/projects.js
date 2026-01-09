@@ -15,8 +15,16 @@ export const projectQuestions = [
     },
     {
         id: 'tcs037',
-        question: 'Tell me about your Charge Management System',
-        answer: `"I built this as a capstone project at Virtusa. It's a banking platform for managing charges for customers and admin users. I created a Spring Boot backend handling authentication, charge configuration, transaction history, and billing logic. The frontend is a React dashboard with role-based access control, allowing users to view, apply, and audit charges. I designed modular REST APIs with structured data models that integrate seamlessly with banking workflows. This project taught me about enterprise-level security, role-based permissions, and building scalable financial systems."`
+        question: 'Tell me about your GST Filing Software',
+        answer: `"I built a Next.js 16 web application for processing GST invoices and generating GSTR-1 compliant JSON files for upload to the Indian GST Portal. The app accepts Excel or JSON files, validates invoices using Zod schemas, and outputs portal-ready JSON. It includes a comprehensive HSN/SAC code master with 680+ headings for tax calculations and a step-by-step workflow for upload → validate → review → download."
+
+**Key Technical Points:**
+• Built with **Next.js 16** (App Router) and **TypeScript**
+• **Zod** schemas for strict invoice validation (GSTIN, dates, tax rates)
+• **Zustand** for state management with mode-aware selectors
+• **ExcelJS** for parsing Excel files with header normalization
+• HSN code lookup system with hierarchical data (chapter → heading → sub-heading)
+• Generates GSTR-1 JSON matching GST Portal specifications`
     },
     {
         id: 'tcs038',
@@ -36,7 +44,7 @@ export const projectQuestions = [
     {
         id: 'tcs041',
         question: 'How did you implement authentication in your projects?',
-        answer: `"In my projects, I used **Clerk** for authentication - a modern auth solution that handles user management, sessions, and security. For the Charge Management System, I implemented **Spring Boot Security** with **JWT tokens** for stateless authentication. I also ensured role-based access control to restrict features based on user roles (customer vs admin)."`
+        answer: `"In my projects, I used **Clerk** for authentication - a modern auth solution that handles user management, sessions, and security. For the GST Filing Software, it's a local-first application designed to run without authentication since it handles sensitive tax data locally. I also have experience with **JWT tokens** for stateless authentication in API-based systems."`
     },
     {
         id: 'tcs091',
@@ -61,31 +69,66 @@ export const projectQuestions = [
     },
     {
         id: 'tcs094',
-        question: 'Explain the architecture of your Charge Management System',
-        answer: `"The backend uses Spring Boot with a layered architecture:
-• **Controller layer**: REST endpoints for CRUD operations
-• **Service layer**: Business logic for charge calculations and billing
-• **Repository layer**: JPA for database operations
-• **Security layer**: JWT authentication and role-based authorization
+        question: 'Explain the architecture of your GST Filing Software',
+        answer: `"The GST Filing Software uses a layered architecture:
 
-The frontend React application makes API calls to these endpoints. I used Spring Security for authentication and implemented custom filters for JWT validation. The database schema includes tables for users, charges, transactions, and audit logs."`
+• **App Layer** (\`app/page.tsx\`): Main dashboard with metric cards, invoice table, and download modal
+• **Components Layer**: Modular React components for invoice-table, tax-summary, error-editor, JSON comparator
+• **Services Layer**: Business logic in \`excel-processor.ts\`, \`json-parser.ts\`, and processors for B2B/CDNR
+• **Schemas Layer**: Zod validation schemas for invoice validation
+• **Data Layer**: HSN master with 680+ headings, SAC codes for services
+• **Store Layer**: Zustand global state with mode-aware selectors
+
+\`\`\`typescript
+// Workflow: Upload → Parse → Validate → Group → Download
+processExcelFile(file, type: 'B2B' | 'CDNR')
+  → parseExcel()           // Read with ExcelJS
+  → normalizeHeaders()     // Map headers to schema
+  → processor.validate()   // Zod validation
+  → processor.group()      // Group into invoices
+  → return { invoices, errors, summary }
+\`\`\``
     },
     {
         id: 'tcs095',
-        question: 'How did you implement role-based access in Charge Management System?',
-        answer: `"I used Spring Security with custom UserDetailsService. Each user has roles (CUSTOMER, ADMIN). Endpoints are annotated with \`@PreAuthorize\` to restrict access. For example, charge configuration endpoints are admin-only. The frontend conditionally renders UI elements based on user roles stored in the authentication token. I also implemented audit logging to track who performs what actions."`
+        question: 'How did you implement validation in the GST Filing Software?',
+        answer: `"I used **Zod** for strict schema validation. Each invoice row is validated against comprehensive rules:
+
+\`\`\`typescript
+B2BInvoiceRowSchema = z.object({
+  gstin: z.string().regex(GSTIN_REGEX),     // 15-char GSTIN format
+  invoiceNumber: z.string().max(16),
+  invoiceDate: z.string().regex(/DD-MM-YYYY/),
+  invoiceValue: z.number().positive(),
+  placeOfSupply: z.string().regex(/^\\d{2}$/), // State code
+  rate: z.number().refine(val => [0,5,12,18,28].includes(val)),
+  taxableValue: z.number().positive(),
+  // ... tax amounts, HSN, etc.
+})
+\`\`\`
+
+Invalid rows are captured with specific error messages, and users can **edit** errors inline and re-validate or **discard** invalid rows."`
     },
     {
         id: 'tcs096',
-        question: 'What billing logic did you implement in Charge Management System?',
-        answer: `"The system calculates charges based on transaction types and amounts. I implemented:
-• Fixed charges for specific transaction types
-• Percentage-based charges
-• Tiered pricing based on volume
-• Monthly aggregation for billing cycles
-• Transaction history with charge breakdowns
+        question: 'What is the HSN Master system in your GST app?',
+        answer: `"I built a hierarchical HSN (Harmonized System Nomenclature) code lookup system with:
 
-The service layer contains the calculation engine that applies relevant charges based on configured rules."`
+| Level | Digits | Example | Description |
+|-------|--------|---------|-------------|
+| Chapter | 2 | \`84\` | Machinery |
+| Heading | 4 | \`8471\` | Computers |
+| Sub-heading | 6 | \`847130\` | Laptops |
+| Tariff | 8 | \`84713010\` | Personal computers |
+
+**Key Functions:**
+\`\`\`typescript
+getHSNDescription("84821090")  // "Other ball bearings"
+getHSNGSTRate("870321")        // 28
+getHSNHierarchy("847130")      // { chapter, heading, subheading, gstRate }
+\`\`\`
+
+The master data includes 99 chapters and 680+ headings with GST rate mappings."`
     },
     {
         id: 'tcs097',
@@ -156,15 +199,62 @@ I added error handling for browser compatibility and microphone permissions."`
     },
     {
         id: 'tcs102',
-        question: 'What desktop automation scripts have you built?',
-        answer: `"I've built several productivity scripts:
-1. **File organizer**: Automatically sorts downloads by file type
-2. **Window manager**: Keyboard shortcuts for window positioning
-3. **Text expander**: Custom snippets for frequently used code
-4. **Batch renamer**: Renames files based on patterns
-5. **Backup automation**: Scheduled backups of project folders
+        question: 'How does the JSON generation work in your GST app?',
+        answer: `"The GST Filing Software generates GSTR-1 compliant JSON that can be directly uploaded to the GST Portal:
 
-I used Node.js for file operations and AHK for system-level interactions and hotkeys. These save me significant time daily."`
+\`\`\`typescript
+// store/gst-store.ts → downloadJSON()
+generateGSTR1JSON(gstin, filingPeriod)
+\`\`\`
+
+The output includes:
+• **B2B Section**: Invoices grouped by recipient GSTIN
+• **HSN Summary**: Aggregated by HSN code and tax rate
+• **Document Issue Summary**: Invoice range statistics
+
+I ensured the JSON structure matches the exact format required by the GST Portal, including proper field names, date formats, and numeric precision."`
+    },
+    {
+        id: 'tcs103',
+        question: 'What challenges did you face building the GST Filing Software?',
+        answer: `"The main challenges were:
+1. **Header normalization**: Excel files from different sources have varying column names. I built a flexible header mapping system.
+2. **Validation complexity**: GST rules are intricate (GSTIN format, state codes, tax rate validation). Zod schemas helped enforce strict rules.
+3. **HSN code hierarchy**: Building a lookup system for 680+ codes with chapter/heading/sub-heading relationships required careful data structuring.
+4. **Error UX**: Making it easy for users to fix validation errors inline rather than re-uploading files.
+5. **Portal compatibility**: Ensuring the generated JSON matches the exact format expected by the GST Portal."`
+    },
+    {
+        id: 'tcs104',
+        question: 'Explain state management in your GST app with Zustand',
+        answer: `"I used Zustand for global state management with mode-aware selectors:
+
+\`\`\`typescript
+interface GSTStore {
+  currentStep: 1 | 2 | 3 | 4          // Workflow step
+  returnType: 'B2B' | 'CDNR'          // Current mode
+  b2bInvoices: B2BInvoice[]           // Valid B2B invoices
+  cdnrInvoices: CDNRInvoice[]         // Valid CDNR invoices
+  b2bErrors: ErrorRow[]               // B2B validation errors
+  cdnrErrors: ErrorRow[]              // CDNR validation errors
+  
+  // Actions
+  addFiles(files: File[])
+  processFiles(): Promise<void>
+  downloadJSON(gstin, period)
+  updateErrorRow(index, data): boolean
+  reset()
+}
+\`\`\`
+
+**Selector Hooks** provide mode-aware access:
+\`\`\`typescript
+useCurrentStep()        // Current workflow step
+useReturnType()         // 'B2B' or 'CDNR'
+useCurrentInvoices()    // Invoices for current mode
+useErrors()             // Errors for current mode
+useValidationSummary()  // { total, valid, error }
+\`\`\`"`
     },
 ];
 
