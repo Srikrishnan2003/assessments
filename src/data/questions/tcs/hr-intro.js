@@ -8,8 +8,8 @@ export const hrQuestions = [
     },
     {
         id: 'tcs002',
-        question: 'Why TCS Prime?',
-        answer: `"TCS Prime offers the perfect platform to work on cutting-edge technologies and complex enterprise solutions. I'm particularly drawn to TCS's focus on digital transformation and innovation. With my experience in full-stack development, AI integration, and building scalable applications, I believe I can contribute meaningfully to TCS's projects while growing as a developer in a structured, learning-focused environment."`
+        question: 'Why TCS?',
+        answer: `"TCS offers the perfect platform to work on cutting-edge technologies and complex enterprise solutions. I'm particularly drawn to TCS's focus on digital transformation and innovation. With my experience in full-stack development, AI integration, and building scalable applications, I believe I can contribute meaningfully to TCS's projects while growing as a developer in a structured, learning-focused environment."`
     },
     {
         id: 'tcs003',
