@@ -4,7 +4,7 @@ export const hrQuestions = [
     {
         id: 'tcs001',
         question: 'Tell me about yourself',
-        answer: `"I'm Srikrishnan B, a Full-Stack Developer with a Master's in Computer Science from Sri Krishna College of Engineering. I specialize in building scalable web applications using JavaScript, TypeScript, React, and Next.js. I've completed internships at Accenture and currently at Virtusa, where I worked on GenAI-powered tools and full-stack projects. I'm passionate about creating intuitive user interfaces and leveraging AI tools like GitHub Copilot to accelerate development. My recent projects include WebForge, a visual Next.js builder, and a Charge Management System for banking workflows."`
+        answer: `"I'm Srikrishnan B, a Full-Stack Developer with a Master's in Computer Science from Sri Krishna College of Engineering. I specialize in building scalable web applications using JavaScript, TypeScript, React, and Next.js. I've completed internships at Accenture and currently at Virtusa, where I worked on GenAI-powered tools and full-stack projects. I'm passionate about creating intuitive user interfaces and leveraging AI tools like GitHub Copilot to accelerate development. My recent projects include WebForge, a visual Next.js builder, and a GST Filing Software that processes invoices and generates GSTR-1 compliant JSON for the Indian GST Portal."`
     },
     {
         id: 'tcs002',

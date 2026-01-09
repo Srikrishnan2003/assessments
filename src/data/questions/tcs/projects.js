@@ -256,6 +256,39 @@ useErrors()             // Errors for current mode
 useValidationSummary()  // { total, valid, error }
 \`\`\`"`
     },
+    {
+        id: 'tcs105',
+        question: 'Tell me about your Charge Management System',
+        answer: `"I built this as a capstone project at Virtusa. It's a banking platform for managing charges for customers and admin users. I created a Spring Boot backend handling authentication, charge configuration, transaction history, and billing logic. The frontend is a React dashboard with role-based access control, allowing users to view, apply, and audit charges. I designed modular REST APIs with structured data models that integrate seamlessly with banking workflows. This project taught me about enterprise-level security, role-based permissions, and building scalable financial systems."`
+    },
+    {
+        id: 'tcs106',
+        question: 'Explain the architecture of your Charge Management System',
+        answer: `"The backend uses Spring Boot with a layered architecture:
+• **Controller layer**: REST endpoints for CRUD operations
+• **Service layer**: Business logic for charge calculations and billing
+• **Repository layer**: JPA for database operations
+• **Security layer**: JWT authentication and role-based authorization
+
+The frontend React application makes API calls to these endpoints. I used Spring Security for authentication and implemented custom filters for JWT validation. The database schema includes tables for users, charges, transactions, and audit logs."`
+    },
+    {
+        id: 'tcs107',
+        question: 'How did you implement role-based access in Charge Management System?',
+        answer: `"I used Spring Security with custom UserDetailsService. Each user has roles (CUSTOMER, ADMIN). Endpoints are annotated with \`@PreAuthorize\` to restrict access. For example, charge configuration endpoints are admin-only. The frontend conditionally renders UI elements based on user roles stored in the authentication token. I also implemented audit logging to track who performs what actions."`
+    },
+    {
+        id: 'tcs108',
+        question: 'What billing logic did you implement in Charge Management System?',
+        answer: `"The system calculates charges based on transaction types and amounts. I implemented:
+• Fixed charges for specific transaction types
+• Percentage-based charges
+• Tiered pricing based on volume
+• Monthly aggregation for billing cycles
+• Transaction history with charge breakdowns
+
+The service layer contains the calculation engine that applies relevant charges based on configured rules."`
+    },
 ];
 
 export default projectQuestions;
