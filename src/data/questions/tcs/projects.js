@@ -1,293 +1,406 @@
-// TCS Prime Interview - Project-Based Questions
+// TCS Prime Interview - Project Questions
 
 export const projectQuestions = [
     {
-        id: 'tcs036',
-        question: 'Explain your WebForge project',
-        answer: `"WebForge is a visual Next.js builder I created for my final year project. It allows developers to build production-ready Next.js applications using a drag-and-drop interface combined with live code editing. I built a Figma-style canvas with a Monaco editor (like VS Code) that synchronizes visual design with code. The system implements a procedural Next.js workflow with file-system navigation, layout control, and reusable components. The goal was to minimize the design-development mismatch by generating clean, production-ready Next.js code directly from visual designs."
+        id: 'tcs054',
+        question: 'Tell me about WebForge project',
+        answer: `### WebForge - Visual Next.js Application Builder
 
-**Key Technical Points:**
-• Built with Next.js and React
-• Integrated Monaco editor for live code editing
-• Implemented drag-and-drop UI with React DnD
-• Real-time synchronization between visual and code views
-• File-system based routing generation`
-    },
-    {
-        id: 'tcs037',
-        question: 'Tell me about your GST Filing Software',
-        answer: `"I built a Next.js 16 web application for processing GST invoices and generating GSTR-1 compliant JSON files for upload to the Indian GST Portal. The app accepts Excel or JSON files, validates invoices using Zod schemas, and outputs portal-ready JSON. It includes a comprehensive HSN/SAC code master with 680+ headings for tax calculations and a step-by-step workflow for upload → validate → review → download."
+#### Project Overview
+| Aspect | Details |
+|--------|---------|
+| **Type** | Personal/Portfolio Project |
+| **Role** | Sole Developer |
+| **Duration** | 3+ months |
+| **Status** | Active Development |
+| **Tech Stack** | Next.js, React, TypeScript, Monaco Editor, Tailwind CSS |
 
-**Key Technical Points:**
-• Built with **Next.js 16** (App Router) and **TypeScript**
-• **Zod** schemas for strict invoice validation (GSTIN, dates, tax rates)
-• **Zustand** for state management with mode-aware selectors
-• **ExcelJS** for parsing Excel files with header normalization
-• HSN code lookup system with hierarchical data (chapter → heading → sub-heading)
-• Generates GSTR-1 JSON matching GST Portal specifications`
-    },
-    {
-        id: 'tcs038',
-        question: 'Explain your GenAI Software Developer Assistant',
-        answer: `"I created this chatbot using Next.js and Hugging Face's DeepSeek Coder R1 model during my Accenture internship. It helps developers with code generation, testing, and documentation. I engineered custom prompts tailored to each task type - whether writing code, creating tests, or generating documentation. The system includes a memory mechanism that saves the last 5 messages to maintain context across conversations. This project demonstrated how AI can automate repetitive development tasks and boost productivity."`
-    },
-    {
-        id: 'tcs039',
-        question: 'What is Focus Flow?',
-        answer: `"Focus Flow is an all-in-one productivity web app I built for students. It includes note-taking with Speech-to-Text and Text-to-Speech, task management, and a collaborative whiteboard. I designed a Kanban-style task manager using Next.js and Tailwind CSS with visual status tracking and calendar integration for real-time notifications. The interface is lightweight and mobile-responsive, making it accessible across devices. This project taught me about building cohesive user experiences and integrating multiple features into a single application."`
-    },
-    {
-        id: 'tcs040',
-        question: 'What challenges did you face in WebForge?',
-        answer: `"The biggest challenge was synchronizing the visual canvas with code in real-time without performance issues. I had to implement efficient state management to track component positions, styles, and properties. Another challenge was generating clean, idiomatic Next.js code from visual designs - I had to ensure proper file structure, routing, and component composition. I solved this by creating a code generation engine that follows Next.js conventions and best practices."`
-    },
-    {
-        id: 'tcs041',
-        question: 'How did you implement authentication in your projects?',
-        answer: `"In my projects, I used **Clerk** for authentication - a modern auth solution that handles user management, sessions, and security. For the GST Filing Software, it's a local-first application designed to run without authentication since it handles sensitive tax data locally. I also have experience with **JWT tokens** for stateless authentication in API-based systems."`
-    },
-    {
-        id: 'tcs091',
-        question: 'How did you implement real-time synchronization in WebForge?',
-        answer: `"I used React state management to maintain a single source of truth for component data. When users drag elements on the canvas, state updates trigger code generation. Similarly, when code is edited in Monaco, parsing updates the visual canvas. I implemented a debounced update mechanism to avoid performance issues from frequent updates. The synchronization layer uses a data structure that maps visual components to their code representations."`
-    },
-    {
-        id: 'tcs092',
-        question: 'What file structure does WebForge generate?',
-        answer: `"WebForge generates a standard Next.js project structure:
-• \`app/\` or \`pages/\` directory for routes
-• \`components/\` for reusable components
-• \`styles/\` for global styles and Tailwind config
-• \`public/\` for static assets
-• \`layout.tsx\` for shared layouts
-• Each component gets its own file with proper imports and exports"`
-    },
-    {
-        id: 'tcs093',
-        question: 'How did you handle component reusability in WebForge?',
-        answer: `"I created a component library with predefined elements (buttons, cards, forms). When users drag these onto the canvas, the system generates React components with proper props. I implemented a props panel where users can customize properties. The code generator ensures components are extracted to separate files if used multiple times, promoting DRY principles."`
-    },
-    {
-        id: 'tcs094',
-        question: 'Explain the architecture of your GST Filing Software',
-        answer: `"The GST Filing Software uses a layered architecture:
+---
 
-• **App Layer** (\`app/page.tsx\`): Main dashboard with metric cards, invoice table, and download modal
-• **Components Layer**: Modular React components for invoice-table, tax-summary, error-editor, JSON comparator
-• **Services Layer**: Business logic in \`excel-processor.ts\`, \`json-parser.ts\`, and processors for B2B/CDNR
-• **Schemas Layer**: Zod validation schemas for invoice validation
-• **Data Layer**: HSN master with 680+ headings, SAC codes for services
-• **Store Layer**: Zustand global state with mode-aware selectors
+#### What It Does
+WebForge is a visual development environment that lets users build Next.js applications through drag-and-drop without writing code manually.
 
+**Core Features**:
+1. **Visual Component Builder**: Drag-drop UI components onto canvas
+2. **Real-time Preview**: See changes instantly in split view
+3. **Code Editor**: Monaco-powered editor for advanced users
+4. **Project Export**: Generate clean, production-ready Next.js code
+5. **Component Library**: Pre-built components (buttons, cards, forms)
+
+---
+
+#### Technical Architecture
+\`\`\`
+┌─────────────────────────────────────────────────────────┐
+│                    WebForge Architecture                │
+├──────────────────┬──────────────────┬───────────────────┤
+│   Visual Editor  │   Code Editor    │    Preview        │
+│   (React DnD)    │   (Monaco)       │    (iframe)       │
+├──────────────────┴──────────────────┴───────────────────┤
+│                    State Management (Zustand)            │
+├──────────────────────────────────────────────────────────┤
+│                    Code Generation Engine                │
+│       (AST manipulation → Clean React/Next.js code)     │
+├──────────────────────────────────────────────────────────┤
+│                    Storage (Local/Cloud)                 │
+└──────────────────────────────────────────────────────────┘
+\`\`\`
+
+---
+
+#### Key Technical Challenges Solved
+
+**1. Drag-and-Drop System**
 \`\`\`typescript
-// Workflow: Upload → Parse → Validate → Group → Download
-processExcelFile(file, type: 'B2B' | 'CDNR')
-  → parseExcel()           // Read with ExcelJS
-  → normalizeHeaders()     // Map headers to schema
-  → processor.validate()   // Zod validation
-  → processor.group()      // Group into invoices
-  → return { invoices, errors, summary }
-\`\`\``
-    },
-    {
-        id: 'tcs095',
-        question: 'How did you implement validation in the GST Filing Software?',
-        answer: `"I used **Zod** for strict schema validation. Each invoice row is validated against comprehensive rules:
-
-\`\`\`typescript
-B2BInvoiceRowSchema = z.object({
-  gstin: z.string().regex(GSTIN_REGEX),     // 15-char GSTIN format
-  invoiceNumber: z.string().max(16),
-  invoiceDate: z.string().regex(/DD-MM-YYYY/),
-  invoiceValue: z.number().positive(),
-  placeOfSupply: z.string().regex(/^\\d{2}$/), // State code
-  rate: z.number().refine(val => [0,5,12,18,28].includes(val)),
-  taxableValue: z.number().positive(),
-  // ... tax amounts, HSN, etc.
-})
-\`\`\`
-
-Invalid rows are captured with specific error messages, and users can **edit** errors inline and re-validate or **discard** invalid rows."`
-    },
-    {
-        id: 'tcs096',
-        question: 'What is the HSN Master system in your GST app?',
-        answer: `"I built a hierarchical HSN (Harmonized System Nomenclature) code lookup system with:
-
-| Level | Digits | Example | Description |
-|-------|--------|---------|-------------|
-| Chapter | 2 | \`84\` | Machinery |
-| Heading | 4 | \`8471\` | Computers |
-| Sub-heading | 6 | \`847130\` | Laptops |
-| Tariff | 8 | \`84713010\` | Personal computers |
-
-**Key Functions:**
-\`\`\`typescript
-getHSNDescription("84821090")  // "Other ball bearings"
-getHSNGSTRate("870321")        // 28
-getHSNHierarchy("847130")      // { chapter, heading, subheading, gstRate }
-\`\`\`
-
-The master data includes 99 chapters and 680+ headings with GST rate mappings."`
-    },
-    {
-        id: 'tcs097',
-        question: 'How did you manage context in your GenAI Assistant?',
-        answer: `"I implemented a conversation memory system that stores the last 5 messages. Each API call includes this context in the prompt. I structured it as:
-
-\`\`\`
-Previous conversation:
-User: [message 1]
-Assistant: [response 1]
-...
-Current query: [new message]
-\`\`\`
-
-This allows the model to maintain context for follow-up questions. I used a circular buffer to keep memory bounded and prevent token limit issues."`
-    },
-    {
-        id: 'tcs098',
-        question: 'What challenges did you face with the Hugging Face model integration?',
-        answer: `"The main challenges were:
-1. **Response time**: Model inference can be slow. I added loading indicators and streaming responses where possible.
-2. **Prompt engineering**: Getting consistent output format required iterative prompt refinement
-3. **Token limits**: Had to balance context window with conversation history
-4. **Error handling**: Model sometimes generates incomplete code. I added validation and retry logic
-5. **Cost management**: Implemented request throttling and caching for common queries"`
-    },
-    {
-        id: 'tcs099',
-        question: 'How did you implement Speech-to-Text and Text-to-Speech in Focus Flow?',
-        answer: `"I used the Web Speech API:
-• **STT**: \`SpeechRecognition\` API to convert voice to text in notes
-• **TTS**: \`SpeechSynthesis\` API to read notes aloud
-
-\`\`\`javascript
-// STT
-const recognition = new webkitSpeechRecognition();
-recognition.onresult = (event) => {
-  const transcript = event.results[0][0].transcript;
-  setNote(transcript);
+// Custom hook for component drag-drop
+const useDragComponent = (component: Component) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: 'COMPONENT',
+    item: { id: component.id, type: component.type },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+  return { isDragging, drag };
 };
-
-// TTS
-const utterance = new SpeechSynthesisUtterance(text);
-speechSynthesis.speak(utterance);
 \`\`\`
 
-I added error handling for browser compatibility and microphone permissions."`
-    },
-    {
-        id: 'tcs100',
-        question: 'Explain the Kanban implementation in Focus Flow',
-        answer: `"I created a Kanban board with three columns: To Do, In Progress, Done. Each task is a draggable card. I used React DnD or a similar library for drag-and-drop. State management tracks task positions and status. When a task is dropped in a new column, its status updates and the UI re-renders. I added visual status indicators, due dates, and priority flags. The calendar integration uses a date library like date-fns to show tasks by deadline."`
-    },
-    {
-        id: 'tcs101',
-        question: 'How did you make Focus Flow mobile-responsive?',
-        answer: `"I used Tailwind CSS's responsive utilities:
-• Mobile-first approach starting with small screens
-• Flexbox and Grid for fluid layouts
-• Responsive breakpoints (sm, md, lg, xl)
-• Collapsible navigation menu on mobile
-• Touch-friendly button sizes (min 44x44px)
-• Tested on multiple devices using Chrome DevTools
-
-\`\`\`javascript
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-\`\`\`"`
-    },
-    {
-        id: 'tcs102',
-        question: 'How does the JSON generation work in your GST app?',
-        answer: `"The GST Filing Software generates GSTR-1 compliant JSON that can be directly uploaded to the GST Portal:
-
+**2. Code Generation**
 \`\`\`typescript
-// store/gst-store.ts → downloadJSON()
-generateGSTR1JSON(gstin, filingPeriod)
-\`\`\`
-
-The output includes:
-• **B2B Section**: Invoices grouped by recipient GSTIN
-• **HSN Summary**: Aggregated by HSN code and tax rate
-• **Document Issue Summary**: Invoice range statistics
-
-I ensured the JSON structure matches the exact format required by the GST Portal, including proper field names, date formats, and numeric precision."`
-    },
-    {
-        id: 'tcs103',
-        question: 'What challenges did you face building the GST Filing Software?',
-        answer: `"The main challenges were:
-1. **Header normalization**: Excel files from different sources have varying column names. I built a flexible header mapping system.
-2. **Validation complexity**: GST rules are intricate (GSTIN format, state codes, tax rate validation). Zod schemas helped enforce strict rules.
-3. **HSN code hierarchy**: Building a lookup system for 680+ codes with chapter/heading/sub-heading relationships required careful data structuring.
-4. **Error UX**: Making it easy for users to fix validation errors inline rather than re-uploading files.
-5. **Portal compatibility**: Ensuring the generated JSON matches the exact format expected by the GST Portal."`
-    },
-    {
-        id: 'tcs104',
-        question: 'Explain state management in your GST app with Zustand',
-        answer: `"I used Zustand for global state management with mode-aware selectors:
-
-\`\`\`typescript
-interface GSTStore {
-  currentStep: 1 | 2 | 3 | 4          // Workflow step
-  returnType: 'B2B' | 'CDNR'          // Current mode
-  b2bInvoices: B2BInvoice[]           // Valid B2B invoices
-  cdnrInvoices: CDNRInvoice[]         // Valid CDNR invoices
-  b2bErrors: ErrorRow[]               // B2B validation errors
-  cdnrErrors: ErrorRow[]              // CDNR validation errors
+// Convert visual tree to React code
+const generateCode = (component: ComponentTree): string => {
+  const props = Object.entries(component.props)
+    .map(([key, value]) => \`\${key}={\${JSON.stringify(value)}}\`)
+    .join(' ');
   
-  // Actions
-  addFiles(files: File[])
-  processFiles(): Promise<void>
-  downloadJSON(gstin, period)
-  updateErrorRow(index, data): boolean
-  reset()
+  const children = component.children
+    .map(child => generateCode(child))
+    .join('\\n');
+  
+  return \`<\${component.type} \${props}>\${children}</\${component.type}>\`;
+};
+\`\`\`
+
+---
+
+#### Impact & Learning
+- Deepened understanding of AST and code generation
+- Mastered Monaco Editor integration
+- Learned complex state management patterns
+- Built a tool I would actually want to use`
+    },
+    {
+        id: 'tcs055',
+        question: 'Tell me about the GST Filing Software',
+        answer: `### GST Filing Software
+
+#### Project Overview
+| Aspect | Details |
+|--------|---------|
+| **Type** | Client Project / Freelance |
+| **Problem** | Manual GST filing is time-consuming and error-prone |
+| **Solution** | Automated invoice processing → GSTR-1 JSON generation |
+| **Users** | Small businesses, accountants |
+| **Tech Stack** | Electron, React, Node.js, XLSX processing |
+
+---
+
+#### What It Does
+Converts Excel invoices into GST-compliant JSON format ready for upload to the GST Portal.
+
+**Workflow**:
+\`\`\`
+Excel Invoice Data → Validation → Tax Calculation → GSTR-1 JSON → Ready for Portal
+\`\`\`
+
+---
+
+#### Key Features
+
+**1. Excel Template Processing**
+- Reads standardized Excel template with invoice data
+- Validates required fields (GSTIN, dates, amounts)
+- Handles multiple invoice types (B2B, B2C, Exports)
+
+**2. HSN/SAC Code Management**
+- Hierarchical HSN code lookup
+- Tooltip descriptions for codes
+- Auto-suggest based on product category
+
+**3. Automatic Tax Calculation**
+\`\`\`javascript
+const calculateGST = (item: InvoiceItem, type: 'IGST' | 'CGST_SGST') => {
+  const taxableValue = item.quantity * item.rate;
+  const gstRate = item.gstRate / 100;
+  
+  if (type === 'IGST') {
+    return {
+      taxableValue,
+      igst: taxableValue * gstRate,
+      cgst: 0,
+      sgst: 0,
+    };
+  }
+  
+  // CGST + SGST split for intra-state
+  return {
+    taxableValue,
+    igst: 0,
+    cgst: taxableValue * (gstRate / 2),
+    sgst: taxableValue * (gstRate / 2),
+  };
+};
+\`\`\`
+
+**4. GSTR-1 JSON Generation**
+- Follows exact GST Portal JSON schema
+- Categorizes invoices by type
+- Ready for direct upload
+
+---
+
+#### Desktop Distribution
+- **Electron** for cross-platform desktop app
+- Works offline (sensitive financial data stays local)
+- No server costs for clients
+
+---
+
+#### Impact
+- Reduces filing time from hours to minutes
+- Eliminates manual calculation errors
+- Simplifies compliance for small businesses`
+    },
+    {
+        id: 'tcs056',
+        question: 'Tell me about the Charge Management System',
+        answer: `### Charge Management System (Virtusa)
+
+#### Project Overview
+| Aspect | Details |
+|--------|---------|
+| **Company** | Virtusa (Client: Major Bank) |
+| **Role** | Full-Stack Developer Intern |
+| **Duration** | 6 months ongoing |
+| **Tech Stack** | React, Redux, Spring Boot, PostgreSQL |
+| **Domain** | Banking - Fees & Charges |
+
+---
+
+#### What It Does
+A system for banking operations to:
+- Configure various charge types (wire fees, penalties, service charges)
+- Set rules for when charges apply
+- Calculate charges on transactions
+- Generate reports for reconciliation
+
+---
+
+#### My Contributions
+
+**1. Frontend Dashboard**
+\`\`\`jsx
+// Charge configuration form with validation
+function ChargeConfigForm({ initialData, onSave }) {
+  const [form, setForm] = useState(initialData);
+  const [errors, setErrors] = useState({});
+  
+  const validate = () => {
+    const newErrors = {};
+    if (!form.name) newErrors.name = 'Required';
+    if (form.minAmount >= form.maxAmount) {
+      newErrors.range = 'Min must be less than max';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+  
+  return (
+    <Form onSubmit={() => validate() && onSave(form)}>
+      <Input label="Charge Name" value={form.name} error={errors.name} />
+      <RangeInputs min={form.minAmount} max={form.maxAmount} error={errors.range} />
+      <DatePicker label="Effective Date" value={form.effectiveDate} />
+    </Form>
+  );
 }
 \`\`\`
 
-**Selector Hooks** provide mode-aware access:
+**2. Data Table with Virtualization**
+- Handles 10,000+ charge records
+- Sortable, filterable columns
+- Inline editing for quick updates
+
+**3. Backend APIs**
+\`\`\`java
+// Spring Boot REST controller
+@RestController
+@RequestMapping("/api/charges")
+public class ChargeController {
+    
+    @GetMapping
+    public Page<Charge> listCharges(Pageable pageable) {
+        return chargeService.findAll(pageable);
+    }
+    
+    @PostMapping
+    public Charge createCharge(@Valid @RequestBody ChargeDTO dto) {
+        return chargeService.create(dto);
+    }
+    
+    @PutMapping("/{id}")
+    public Charge updateCharge(@PathVariable Long id, @Valid @RequestBody ChargeDTO dto) {
+        return chargeService.update(id, dto);
+    }
+}
+\`\`\`
+
+---
+
+#### Impact
+- 40% reduction in configuration time
+- Zero data entry errors (validation)
+- Full audit trail for compliance`
+    },
+    {
+        id: 'tcs057',
+        question: 'Tell me about Focus Flow',
+        answer: `### Focus Flow - Productivity Application
+
+#### Project Overview
+| Aspect | Details |
+|--------|---------|
+| **Type** | Personal Project |
+| **Purpose** | All-in-one productivity tool |
+| **Tech Stack** | Next.js, Convex, Clerk, Tailwind CSS |
+| **Status** | In Development |
+
+---
+
+#### Core Features
+
+**1. Task Management**
+- Kanban boards for project organization
+- Due dates, priorities, labels
+- Subtasks and checklists
+
+**2. Note Taking**
+- Rich text editor with markdown support
+- Links between notes (wiki-style)
+- Quick capture for ideas
+
+**3. Whiteboard/Canvas**
+- Infinite canvas for brainstorming
+- Draw, add sticky notes, images
+- Collaborative (planned)
+
+**4. Focus Timer**
+- Pomodoro technique support
+- Session tracking
+- Integration with tasks
+
+---
+
+#### Technical Highlights
+
+**Real-time Sync with Convex**
 \`\`\`typescript
-useCurrentStep()        // Current workflow step
-useReturnType()         // 'B2B' or 'CDNR'
-useCurrentInvoices()    // Invoices for current mode
-useErrors()             // Errors for current mode
-useValidationSummary()  // { total, valid, error }
-\`\`\`"`
-    },
-    {
-        id: 'tcs105',
-        question: 'Tell me about your Charge Management System',
-        answer: `"I built this as a capstone project at Virtusa. It's a banking platform for managing charges for customers and admin users. I created a Spring Boot backend handling authentication, charge configuration, transaction history, and billing logic. The frontend is a React dashboard with role-based access control, allowing users to view, apply, and audit charges. I designed modular REST APIs with structured data models that integrate seamlessly with banking workflows. This project taught me about enterprise-level security, role-based permissions, and building scalable financial systems."`
-    },
-    {
-        id: 'tcs106',
-        question: 'Explain the architecture of your Charge Management System',
-        answer: `"The backend uses Spring Boot with a layered architecture:
-• **Controller layer**: REST endpoints for CRUD operations
-• **Service layer**: Business logic for charge calculations and billing
-• **Repository layer**: JPA for database operations
-• **Security layer**: JWT authentication and role-based authorization
+// Tasks auto-sync across devices
+const tasks = useQuery(api.tasks.list, { projectId });
+const updateTask = useMutation(api.tasks.update);
 
-The frontend React application makes API calls to these endpoints. I used Spring Security for authentication and implemented custom filters for JWT validation. The database schema includes tables for users, charges, transactions, and audit logs."`
-    },
-    {
-        id: 'tcs107',
-        question: 'How did you implement role-based access in Charge Management System?',
-        answer: `"I used Spring Security with custom UserDetailsService. Each user has roles (CUSTOMER, ADMIN). Endpoints are annotated with \`@PreAuthorize\` to restrict access. For example, charge configuration endpoints are admin-only. The frontend conditionally renders UI elements based on user roles stored in the authentication token. I also implemented audit logging to track who performs what actions."`
-    },
-    {
-        id: 'tcs108',
-        question: 'What billing logic did you implement in Charge Management System?',
-        answer: `"The system calculates charges based on transaction types and amounts. I implemented:
-• Fixed charges for specific transaction types
-• Percentage-based charges
-• Tiered pricing based on volume
-• Monthly aggregation for billing cycles
-• Transaction history with charge breakdowns
+// Updates appear instantly on all connected clients
+<TaskCard 
+  task={task}
+  onComplete={() => updateTask({ id: task._id, completed: true })}
+/>
+\`\`\`
 
-The service layer contains the calculation engine that applies relevant charges based on configured rules."`
+**Authentication with Clerk**
+\`\`\`tsx
+// Protected app with clerk middleware
+export default authMiddleware({
+  publicRoutes: ["/", "/pricing"],
+  ignoredRoutes: ["/api/webhooks"],
+});
+\`\`\`
+
+**Canvas with Excalidraw**
+- Decided to use Excalidraw after evaluating custom implementation
+- Customized styling to match app theme
+- Integrated with note-taking system
+
+---
+
+#### Learning Outcomes
+- Real-time database patterns
+- Third-party library integration
+- Feature prioritization (what's MVP vs nice-to-have)`
+    },
+    {
+        id: 'tcs058',
+        question: 'How do you choose technologies for a project?',
+        answer: `### Technology Selection Framework
+
+#### My Decision Process
+
+**Step 1: Requirements Analysis**
+| Question | Considerations |
+|----------|----------------|
+| What's the scale? | Prototype vs production |
+| Who's the team? | Solo vs team, experience levels |
+| What's the timeline? | Quick MVP vs long-term project |
+| What's the domain? | E-commerce, banking, consumer |
+
+---
+
+**Step 2: Evaluation Criteria**
+
+\`\`\`
+For each technology option, I evaluate:
+
+1. MATURITY: Is it stable? Active maintenance?
+2. ECOSYSTEM: Libraries, tools, integrations?
+3. LEARNING CURVE: How fast can team be productive?
+4. PERFORMANCE: Does it meet requirements?
+5. HIRING: Can we find developers if needed?
+6. FUTURE: Will it be relevant in 2-3 years?
+\`\`\`
+
+---
+
+**Step 3: Real Examples from My Projects**
+
+**WebForge Technology Choices**:
+| Decision | Options Considered | Choice | Why |
+|----------|-------------------|--------|-----|
+| Framework | React, Vue, Svelte | Next.js | SSR, routing, ecosystem |
+| State | Redux, Zustand, Jotai | Zustand | Simpler API, sufficient for needs |
+| Editor | CodeMirror, Ace, Monaco | Monaco | VS Code familiarity, features |
+| Styling | CSS, Sass, Tailwind | Tailwind | Speed, consistency |
+
+**GST Software**:
+| Decision | Choice | Why |
+|----------|--------|-----|
+| Desktop | Electron | Cross-platform, web skills reusable |
+| Excel | xlsx library | Best Node.js Excel support |
+| Offline-first | Local storage | Sensitive data, no server costs |
+
+---
+
+**Step 4: Prototype When Uncertain**
+\`\`\`
+If two options seem equal:
+1. Build a small proof-of-concept with each
+2. Compare: developer experience, performance, edge cases
+3. Decide based on hands-on experience, not just docs
+\`\`\`
+
+---
+
+#### Key Principle
+*"Choose boring technology for crucial paths, experiment on edges."*
+- Core: Proven, stable technologies
+- Non-critical features: Try new things, learn`
     },
 ];
 
