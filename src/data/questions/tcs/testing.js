@@ -1,10 +1,10 @@
 // TCS Prime Interview - Testing & CI/CD Questions
 
 export const testingQuestions = [
-    {
-        id: 'tcs118',
-        question: 'What types of testing are you familiar with?',
-        answer: `### Simple Explanation
+  {
+    id: 'tcs118',
+    question: 'What types of testing are you familiar with?',
+    answer: `### Simple Explanation
 Testing ensures your code works correctly. Different levels of testing catch different types of bugs:
 - **Unit tests**: Test individual functions
 - **Integration tests**: Test how parts work together
@@ -101,11 +101,11 @@ describe('Checkout Flow', () => {
 
 ### Why It Matters
 Tests catch bugs before users do, enable confident refactoring, serve as documentation, and are essential for CI/CD pipelines.`
-    },
-    {
-        id: 'tcs119',
-        question: 'How do you write unit tests in React?',
-        answer: `### Simple Explanation
+  },
+  {
+    id: 'tcs119',
+    question: 'How do you write unit tests in React?',
+    answer: `### Simple Explanation
 Unit tests in React verify that components render correctly and behave as expected. We use React Testing Library to test components the way users interact with them - by finding elements and simulating events.
 
 ### Real-World Analogy
@@ -220,11 +220,11 @@ test('example test structure', () => {
 
 ### Why It Matters
 Good tests give confidence to refactor and add features. React Testing Library encourages testing user behavior, leading to more maintainable tests.`
-    },
-    {
-        id: 'tcs120',
-        question: 'What is CI/CD?',
-        answer: `### Simple Explanation
+  },
+  {
+    id: 'tcs120',
+    question: 'What is CI/CD?',
+    answer: `### Simple Explanation
 CI/CD automates the process of testing and deploying code:
 - **CI (Continuous Integration)**: Automatically test every code change
 - **CD (Continuous Deployment)**: Automatically deploy passing code to production
@@ -294,12 +294,12 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Build Docker image
-        run: docker build -t myapp:${{ github.sha }} .
+        run: docker build -t myapp:\$\{{ github.sha }} .
       
       - name: Push to registry
         run: |
-          docker tag myapp:${{ github.sha }} registry.example.com/myapp:${{ github.sha }}
-          docker push registry.example.com/myapp:${{ github.sha }}
+          docker tag myapp:\$\{{ github.sha }} registry.example.com/myapp:\$\{{ github.sha }}
+          docker push registry.example.com/myapp:\$\{{ github.sha }}
 
   # 3. DEPLOY TO STAGING
   deploy-staging:
@@ -310,7 +310,7 @@ jobs:
     steps:
       - name: Deploy to staging
         run: |
-          kubectl set image deployment/myapp myapp=registry.example.com/myapp:${{ github.sha }}
+          kubectl set image deployment/myapp myapp=registry.example.com/myapp:\$\{{ github.sha }}
 
   # 4. DEPLOY TO PRODUCTION
   deploy-production:
@@ -323,7 +323,7 @@ jobs:
     steps:
       - name: Deploy to production
         run: |
-          kubectl set image deployment/myapp myapp=registry.example.com/myapp:${{ github.sha }}
+          kubectl set image deployment/myapp myapp=registry.example.com/myapp:\$\{{ github.sha }}
 \`\`\`
 
 \`\`\`javascript
@@ -345,11 +345,11 @@ CI/CD enables:
 - **Fewer bugs** - Automated testing catches issues early
 - **Consistent quality** - Every change goes through same process
 - **Quick rollback** - Easy to revert if something breaks`
-    },
-    {
-        id: 'tcs121',
-        question: 'How do you optimize React application performance?',
-        answer: `### Simple Explanation
+  },
+  {
+    id: 'tcs121',
+    question: 'How do you optimize React application performance?',
+    answer: `### Simple Explanation
 React performance optimization focuses on reducing unnecessary re-renders and loading less code upfront. The goal is to make your app feel fast and responsive.
 
 ### Real-World Analogy
@@ -450,11 +450,11 @@ const style = useMemo(() => ({ color: 'red' }), []);
 
 ### Why It Matters
 Performance directly impacts user experience and business metrics. A 1-second delay can reduce conversions by 7%. Slow apps frustrate users.`
-    },
-    {
-        id: 'tcs122',
-        question: 'How do you optimize API calls?',
-        answer: `### Simple Explanation
+  },
+  {
+    id: 'tcs122',
+    question: 'How do you optimize API calls?',
+    answer: `### Simple Explanation
 API optimization reduces unnecessary requests and improves response times. This means faster loading, less server cost, and better user experience.
 
 ### Real-World Analogy
@@ -589,11 +589,11 @@ async function likePost(postId) {
 
 ### Why It Matters
 Every unnecessary API call costs server resources and slows user experience. Good API optimization can reduce server costs by 50%+ and make apps feel instant.`
-    },
-    {
-        id: 'tcs123',
-        question: 'How do you measure web performance?',
-        answer: `### Simple Explanation
+  },
+  {
+    id: 'tcs123',
+    question: 'How do you measure web performance?',
+    answer: `### Simple Explanation
 Web performance metrics measure how fast your site loads and becomes usable. Core Web Vitals are the key metrics Google uses for search ranking.
 
 ### Real-World Analogy
@@ -710,7 +710,7 @@ Performance affects:
 - **Conversion**: 1s delay = 7% fewer conversions
 - **User experience**: Slow sites frustrate users
 - **Accessibility**: Slow sites hurt users on poor connections`
-    },
+  },
 ];
 
 export default testingQuestions;
