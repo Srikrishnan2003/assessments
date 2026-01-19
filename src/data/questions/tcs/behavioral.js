@@ -1,10 +1,10 @@
 // TCS Prime Interview - Behavioral Questions
 
 export const behavioralQuestions = [
-    {
-        id: 'tcs124',
-        question: 'Describe a time you had to learn a new technology quickly',
-        answer: `### Using STAR Format
+  {
+    id: 'tcs124',
+    question: 'Describe a time you had to learn a new technology quickly',
+    answer: `### Using STAR Format
 
 **Situation**: When building WebForge, I needed to integrate Monaco Editor (the code editor used in VS Code) for real-time code editing. I had limited experience with this library, and the deadline was tight - one week to create a working prototype.
 
@@ -25,11 +25,11 @@ export const behavioralQuestions = [
 
 ### Key Takeaway
 *"Fast learning isn't about rushing - it's about structured progress and knowing which resources to use."*`
-    },
-    {
-        id: 'tcs125',
-        question: 'Tell me about a time you disagreed with a team member',
-        answer: `### Using STAR Format
+  },
+  {
+    id: 'tcs125',
+    question: 'Tell me about a time you disagreed with a team member',
+    answer: `### Using STAR Format
 
 **Situation**: During the Charge Management System project at Virtusa, a team member suggested storing sensitive charge configurations in localStorage for faster access. I disagreed with this approach due to security concerns.
 
@@ -51,11 +51,11 @@ The feature was implemented securely, and we passed the security audit without i
 
 ### Key Takeaway
 *"Constructive disagreement with evidence leads to better solutions. It's about solving the problem together, not winning an argument."*`
-    },
-    {
-        id: 'tcs126',
-        question: 'How do you handle tight deadlines?',
-        answer: `### Using STAR Format
+  },
+  {
+    id: 'tcs126',
+    question: 'How do you handle tight deadlines?',
+    answer: `### Using STAR Format
 
 **Situation**: During my Accenture internship, I was assigned to deliver the GenAI Developer Assistant in a compressed timeframe. The original timeline was cut by 30% due to a client demo schedule change.
 
@@ -77,11 +77,11 @@ Key outcomes:
 
 ### Key Takeaway
 *"Tight deadlines require clear priorities. Deliver a working solution first, then iterate."*`
-    },
-    {
-        id: 'tcs127',
-        question: 'Describe a project that didn\\'t go as planned',
-        answer: `### Using STAR Format
+  },
+  {
+    id: 'tcs127',
+    question: "Describe a project that didn't go as planned",
+    answer: `### Using STAR Format
 
 **Situation**: In an early version of Focus Flow (my productivity app), I decided to build the whiteboard/canvas feature from scratch instead of using an existing library.
 
@@ -108,11 +108,11 @@ Lessons learned:
 
 ### Key Takeaway
 *"Not every problem needs to be solved from scratch. Know when to leverage existing tools."*`
-    },
-{
+  },
+  {
     id: 'tcs128',
-        question: 'How do you keep your code maintainable?',
-            answer: `### My Code Quality Principles
+    question: 'How do you keep your code maintainable?',
+    answer: `### My Code Quality Principles
 
 I follow a set of practices that make code easy to read, modify, and extend:
 
@@ -177,11 +177,11 @@ Unit tests ensure code works as expected and prevents regressions
 
 ### Why This Matters
 *"Code is read far more often than it's written. Write for your future self and your teammates."*`
-},
-{
+  },
+  {
     id: 'tcs129',
-        question: 'What motivates you in software development?',
-            answer: `### What Drives Me
+    question: 'What motivates you in software development?',
+    answer: `### What Drives Me
 
 **1. Solving Real Problems**
 There's deep satisfaction in seeing people use something I built. When WebForge helps a developer prototype faster, or when my GST software saves hours of manual work - that's the payoff.
@@ -214,11 +214,11 @@ TCS offers:
 - Collaborative environment with experienced developers
 
 *"I'm motivated by meaningful work that challenges me and helps others."*`
-},
-{
+  },
+  {
     id: 'tcs130',
-        question: 'How do you handle constructive criticism?',
-            answer: `### My Approach to Feedback
+    question: 'How do you handle constructive criticism?',
+    answer: `### My Approach to Feedback
 
 **I view criticism as free advice for improvement.** Here's how I handle it:
 
@@ -273,7 +273,7 @@ Now I apply these patterns in all my projects, including WebForge and personal w
 - Thank the reviewer for taking time
 - Ask clarifying questions
 - Apply feedback consistently going forward`
-},
+  },
 ];
 
 export default behavioralQuestions;
