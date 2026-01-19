@@ -45,9 +45,105 @@ function MarkdownRenderer({ content, isMobile }) {
                 continue;
             }
 
+            // Handle markdown tables
+            if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+                const tableRows = [];
+
+                // Collect all table lines
+                while (i < lines.length && lines[i].trim().startsWith('|') && lines[i].trim().endsWith('|')) {
+                    const row = lines[i].trim();
+                    // Skip separator rows (|---|---|)
+                    if (!row.match(/^\|[\s\-:|]+\|$/)) {
+                        tableRows.push(row);
+                    }
+                    i++;
+                }
+
+                if (tableRows.length > 0) {
+                    const parseRow = (row) => {
+                        return row.split('|').filter((cell, idx, arr) => idx !== 0 && idx !== arr.length - 1).map(cell => cell.trim());
+                    };
+
+                    const headers = parseRow(tableRows[0]);
+                    const dataRows = tableRows.slice(1).map(parseRow);
+
+                    elements.push(
+                        <div key={`table-${i}`} style={{
+                            margin: '16px 0',
+                            borderRadius: '12px',
+                            overflow: 'hidden',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+                            border: '1px solid #e5e7eb'
+                        }}>
+                            <table style={{
+                                width: '100%',
+                                borderCollapse: 'collapse',
+                                fontSize: isMobile ? '13px' : '14px'
+                            }}>
+                                <thead>
+                                    <tr style={{
+                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                    }}>
+                                        {headers.map((header, idx) => (
+                                            <th key={idx} style={{
+                                                padding: isMobile ? '10px 12px' : '12px 16px',
+                                                textAlign: 'left',
+                                                fontWeight: '600',
+                                                color: 'white',
+                                                borderBottom: 'none'
+                                            }}>
+                                                {renderInlineMarkdown(header)}
+                                            </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {dataRows.map((row, rowIdx) => (
+                                        <tr key={rowIdx} style={{
+                                            backgroundColor: rowIdx % 2 === 0 ? '#f9fafb' : 'white'
+                                        }}>
+                                            {row.map((cell, cellIdx) => (
+                                                <td key={cellIdx} style={{
+                                                    padding: isMobile ? '10px 12px' : '12px 16px',
+                                                    borderBottom: '1px solid #e5e7eb',
+                                                    color: '#374151'
+                                                }}>
+                                                    {renderInlineMarkdown(cell)}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    );
+                }
+                continue;
+            }
+
             // Handle empty lines
             if (trimmed === '') {
                 elements.push(<div key={`space-${i}`} style={{ height: '8px' }} />);
+                i++;
+                continue;
+            }
+
+            // Handle headers ### and ##
+            if (trimmed.startsWith('###')) {
+                const headerText = trimmed.replace(/^###\s*/, '');
+                elements.push(
+                    <h3 key={`h3-${i}`} style={{
+                        fontSize: isMobile ? '16px' : '18px',
+                        fontWeight: '700',
+                        color: '#1f2937',
+                        marginTop: '20px',
+                        marginBottom: '12px',
+                        borderBottom: '2px solid #7c3aed',
+                        paddingBottom: '8px'
+                    }}>
+                        {headerText}
+                    </h3>
+                );
                 i++;
                 continue;
             }
