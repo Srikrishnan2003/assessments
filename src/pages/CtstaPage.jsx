@@ -1,0 +1,238 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import ctstaTopics, { getTotalCtstaQuestionCount, getCtstaModules } from '../data/questions/ctsta';
+import MarkdownRenderer from '../components/MarkdownRenderer';
+
+// Custom hook for responsive breakpoints
+function useWindowSize() {
+    const [windowSize, setWindowSize] = useState({
+        width: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    });
+
+    useEffect(() => {
+        function handleResize() {
+            setWindowSize({ width: window.innerWidth });
+        }
+        window.addEventListener('resize', handleResize);
+        handleResize();
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowSize;
+}
+
+// CTSTA Question Card Component with Markdown Rendering
+function CtstaQuestionCard({ question, index, isExpanded, onToggle, isMobile }) {
+    const cardStyle = {
+        backgroundColor: 'white',
+        borderRadius: isMobile ? '12px' : '16px',
+        border: '2px solid #e0f2fe',
+        boxShadow: isExpanded ? '0 10px 25px -5px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.1)',
+        transition: 'all 0.2s ease',
+    };
+
+    const headerStyle = {
+        padding: isMobile ? '16px 16px' : '24px 32px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: isMobile ? '12px' : '24px'
+    };
+
+    return (
+        <div style={cardStyle}>
+            <div style={headerStyle} onClick={onToggle}>
+                <div style={{ flex: 1, color: '#27272a', fontSize: isMobile ? '14px' : '16px', lineHeight: '1.6' }}>
+                    <span style={{ color: '#0891b2', marginRight: isMobile ? '8px' : '12px', fontWeight: '600' }}>Q{index + 1}.</span>
+                    {question.question}
+                </div>
+                <button style={{ color: '#71717a', padding: '4px', background: 'transparent', border: 'none', cursor: 'pointer', flexShrink: 0 }}>
+                    {isExpanded ? <ChevronUp size={isMobile ? 20 : 24} /> : <ChevronDown size={isMobile ? 20 : 24} />}
+                </button>
+            </div>
+
+            {isExpanded && (
+                <div style={{
+                    padding: isMobile ? '16px' : '24px 32px 32px',
+                    borderTop: '1px solid #ecfeff',
+                    backgroundColor: '#f0fdfa'
+                }}>
+                    <MarkdownRenderer content={question.answer} isMobile={isMobile} />
+                </div>
+            )}
+        </div>
+    );
+}
+
+// Cognizant GenC & GenC Pro Prep Page
+function CtstaPage() {
+    const [activeCategory, setActiveCategory] = useState(ctstaTopics[0]?.id || '');
+    const [expandedId, setExpandedId] = useState(null);
+    const { width } = useWindowSize();
+
+    const isMobile = width < 640;
+    const totalQuestions = getTotalCtstaQuestionCount();
+    const activeCategory_ = ctstaTopics.find(t => t.id === activeCategory);
+    const questions = activeCategory_?.questions || [];
+    const modules = getCtstaModules();
+
+    const handleToggle = (id) => {
+        setExpandedId(expandedId === id ? null : id);
+    };
+
+    const handleCategoryChange = (categoryId) => {
+        setActiveCategory(categoryId);
+        setExpandedId(null);
+    };
+
+    // Get module color
+    const getModuleColor = (module) => {
+        switch (module) {
+            case 'Core Java': return '#059669';
+            case 'Database': return '#7c3aed';
+            case 'Web Competency': return '#ea580c';
+            case 'Infrastructure': return '#0891b2';
+            default: return '#0891b2';
+        }
+    };
+
+    return (
+        <div style={{ minHeight: '100vh', backgroundColor: '#ecfeff', display: 'flex', flexDirection: 'column' }}>
+            {/* Header */}
+            <header style={{ backgroundColor: 'white', borderBottom: '1px solid #a5f3fc', padding: isMobile ? '16px' : '24px' }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h1 style={{ fontSize: isMobile ? '16px' : '24px', fontWeight: '700', color: '#0e7490', margin: 0 }}>
+                            Cognizant GenC & GenC Pro
+                        </h1>
+                        <p style={{ fontSize: isMobile ? '11px' : '14px', color: '#0891b2', margin: '4px 0 0 0' }}>
+                            Cluster 1: Java + Web • {totalQuestions} Questions
+                        </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <Link
+                            to="/tcsinter"
+                            style={{
+                                padding: isMobile ? '8px 12px' : '10px 16px',
+                                fontSize: isMobile ? '11px' : '13px',
+                                fontWeight: '600',
+                                borderRadius: '8px',
+                                backgroundColor: '#7c3aed',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            TCS Prep
+                        </Link>
+                        <Link
+                            to="/barcoa"
+                            style={{
+                                padding: isMobile ? '8px 12px' : '10px 16px',
+                                fontSize: isMobile ? '11px' : '13px',
+                                fontWeight: '600',
+                                borderRadius: '8px',
+                                backgroundColor: '#18181b',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            ← BARC
+                        </Link>
+                    </div>
+                </div>
+            </header>
+
+            {/* Module Tabs */}
+            <div style={{ backgroundColor: '#cffafe', borderBottom: '1px solid #a5f3fc', padding: isMobile ? '8px 12px' : '12px 24px' }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {modules.map(module => (
+                        <span
+                            key={module}
+                            style={{
+                                padding: '4px 12px',
+                                fontSize: isMobile ? '10px' : '12px',
+                                fontWeight: '600',
+                                borderRadius: '20px',
+                                backgroundColor: getModuleColor(module),
+                                color: 'white',
+                            }}
+                        >
+                            {module}
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            {/* Category Navigation */}
+            <nav style={{ backgroundColor: 'white', borderBottom: '1px solid #a5f3fc', position: 'sticky', top: 0, zIndex: 10 }}>
+                <div style={{ maxWidth: '1000px', margin: '0 auto', padding: isMobile ? '12px' : '16px 24px' }}>
+                    <div style={{ display: 'flex', gap: isMobile ? '8px' : '12px', overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: '4px' }}>
+                        {ctstaTopics.map((topic) => (
+                            <button
+                                key={topic.id}
+                                onClick={() => handleCategoryChange(topic.id)}
+                                style={{
+                                    padding: isMobile ? '8px 14px' : '12px 20px',
+                                    fontSize: isMobile ? '11px' : '13px',
+                                    fontWeight: '500',
+                                    borderRadius: '8px',
+                                    whiteSpace: 'nowrap',
+                                    flexShrink: 0,
+                                    border: activeCategory === topic.id ? 'none' : '1px solid #a5f3fc',
+                                    backgroundColor: activeCategory === topic.id ? '#0891b2' : 'white',
+                                    color: activeCategory === topic.id ? 'white' : '#0e7490',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                {topic.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </nav>
+
+            {/* Questions List */}
+            <main style={{ flex: 1, overflowY: 'auto' }}>
+                <div style={{ maxWidth: '800px', margin: '0 auto', padding: isMobile ? '24px 12px' : '48px 24px' }}>
+                    <div style={{ textAlign: 'center', marginBottom: isMobile ? '24px' : '40px' }}>
+                        <span style={{
+                            display: 'inline-block',
+                            padding: '4px 12px',
+                            fontSize: '11px',
+                            fontWeight: '600',
+                            borderRadius: '20px',
+                            backgroundColor: getModuleColor(activeCategory_?.module),
+                            color: 'white',
+                            marginBottom: '8px'
+                        }}>
+                            {activeCategory_?.module}
+                        </span>
+                        <h2 style={{ fontSize: isMobile ? '14px' : '18px', fontWeight: '600', color: '#0e7490', margin: 0 }}>
+                            {activeCategory_?.name} — {questions.length} Questions
+                        </h2>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? '16px' : '32px' }}>
+                        {questions.map((question, idx) => (
+                            <CtstaQuestionCard
+                                key={question.id}
+                                question={question}
+                                index={idx}
+                                isExpanded={expandedId === question.id}
+                                onToggle={() => handleToggle(question.id)}
+                                isMobile={isMobile}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+
+export default CtstaPage;
