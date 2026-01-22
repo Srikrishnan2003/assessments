@@ -157,21 +157,38 @@ function BarcPage() {
                             Scientific Officer (CSE) • {totalQuestions} Questions
                         </p>
                     </div>
-                    <Link
-                        to="/tcsinter"
-                        style={{
-                            padding: isMobile ? '8px 16px' : '10px 20px',
-                            fontSize: isMobile ? '12px' : '14px',
-                            fontWeight: '600',
-                            borderRadius: '8px',
-                            backgroundColor: '#7c3aed',
-                            color: 'white',
-                            textDecoration: 'none',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        TCS Interview →
-                    </Link>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <Link
+                            to="/ctsta"
+                            style={{
+                                padding: isMobile ? '8px 12px' : '10px 16px',
+                                fontSize: isMobile ? '11px' : '13px',
+                                fontWeight: '600',
+                                borderRadius: '8px',
+                                backgroundColor: '#0891b2',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            Cognizant →
+                        </Link>
+                        <Link
+                            to="/tcsinter"
+                            style={{
+                                padding: isMobile ? '8px 12px' : '10px 16px',
+                                fontSize: isMobile ? '11px' : '13px',
+                                fontWeight: '600',
+                                borderRadius: '8px',
+                                backgroundColor: '#7c3aed',
+                                color: 'white',
+                                textDecoration: 'none',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            TCS →
+                        </Link>
+                    </div>
                 </div>
             </header>
 
