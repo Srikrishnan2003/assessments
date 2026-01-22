@@ -1,0 +1,7 @@
+/*
+  Redirect all routes to index.html for SPA client-side routing
+*/
+/*  /ctsta    /index.html   200
+/*  /tcsinter /index.html   200
+/*  /barcoa   /index.html   200
+/*  /*        /index.html   200
