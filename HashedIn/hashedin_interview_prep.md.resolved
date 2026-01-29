@@ -1,0 +1,126 @@
+# HashedIn by Deloitte - Interview Preparation Guide
+## Project: GenAI Software Development Assistant
+
+This document provides a comprehensive breakdown of the project for your interview. It covers the system architecture, how to frame the backend design (including future enhancements), and a curated list of end-to-end questions and answers.
+
+---
+
+## 1. System Architecture
+
+The project follows a **modern, serverless, micro-frontend inspired architecture** leveraging **Next.js** as the full-stack framework. It acts as an intelligent orchestration layer between the user and powerful LLMs hosted on Hugging Face.
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    User[User / Client Browser]
+    
+    subgraph Frontend_NextJS ["Frontend (Next.js / React)"]
+        UI_Components[UI Components (Shadcn/Tailwind)]
+        State[State Management (React Hooks)]
+        LocalStorage[Local Storage (History)]
+    end
+
+    subgraph Backend_NextJS ["Backend (Next.js API Routes)"]
+        API_Route[API Gateway (/api/generate)]
+        Prompt_Engine[Prompt Engineering Templates]
+        Proxy_Layer[Request Proxy & Validation]
+    end
+
+    subgraph External_Services ["External Services"]
+        HF_Inference[Hugging Face Inference API]
+        Model[LLM (e.g., Mixtral-8x7B)]
+    end
+
+    %% Data Flow
+    User -- "1. Input Request (Mode + Prompt)" --> UI_Components
+    UI_Components -- "2. POST /api/generate" --> API_Route
+    API_Route -- "3. Select Template & Construct Context" --> Prompt_Engine
+    Prompt_Engine --> Proxy_Layer
+    Proxy_Layer -- "4. Auth Request (API Key)" --> HF_Inference
+    HF_Inference -- "5. Process with Model" --> Model
+    Model -- "6. Return Structured Markdown" --> HF_Inference
+    HF_Inference -- "7. Response" --> Proxy_Layer
+    Proxy_Layer -- "8. JSON Response" --> UI_Components
+    UI_Components -- "9. Parse & Render (Markdown/Code)" --> User
+```
+
+---
+
+## 2. Framing the Backend Architecture
+
+**Interviewer Question:** *"Tell me about the backend of your project. How is it structured?"*
+
+**Your Answer Frame:**
+
+"The backend is built using **Next.js API Routes**, which allows us to maintain a **serverless architecture**. This approach was chosen for its scalability, ease of deployment (built-in with Vercel/Next.js), and zero-config setup.
+
+Currently, the backend acts as a **BFF (Backend for Frontend)** pattern:
+1.  **Orchestration:** It takes user inputs and specific modes (Generate, Explain, Debug).
+2.  **Prompt Engineering Layer:** It injects these inputs into specialized context templates ([lib/templates.ts](file:///e:/genai-codegen-assistant-main/lib/templates.ts)) to ensure the LLM returns structured, parseable data.
+3.  **Security:** It securely handles the Hugging Face API keys using server-side environment variables, ensuring no sensitive credentials interact with the client.
+4.  **Error Handling:** It manages upstream errors from the AI provider and returns standardized error codes to the UI.
+
+**Future Enhancement (The "Perfect" Frame):**
+To scale this further (e.g., for an enterprise use case), I would integrate **Supabase** to introduce persistence and authentication:
+*   **Auth:** Move from a public tool to a user-centric one (Supabase Auth/OAuth).
+*   **Database:** Store chat history, user preferences, and saved code snippets in a PostgreSQL database (managed by Supabase) instead of relyig on Local Storage.
+*   **Edge Functions:** We could even move the prompt logic to Supabase Edge Functions for lower latency in specific regions."
+
+---
+
+## 3. End-to-End Interview Questions & Answers
+
+### A. General & Architectural
+
+**Q1: Why did you choose Next.js for this project instead of a separate React App + Express Backend?**
+*   **Answer:** "Next.js provides a unified full-stack environment. Given the project's scope, managing a separate Express server would add unnecessary complexity (DevOps, CORS configuration, deployment). Next.js API routes provide the exact server-side capabilities we needed (hiding API keys, proxying requests) with zero configuration, and allow for distinct rendering methods if we need to scale SEO-heavy pages in the future."
+
+**Q2: How does the application handle state management?**
+*   **Answer:** "For this application, local component state (using `useState` and `useEffect`) was sufficient because the data flow is primarily unidirectional (User -> API -> Display). We use minimal global state. For persisting chat history across sessions, we utilize the browser's `localStorage` to keep the app lightweight without requiring a user login initially."
+
+**Q3: Describe the flow of a request from the user clicking 'Send' to seeing the code.**
+*   **Answer:** "User enters a prompt -> Frontend verifies input -> Sends POST request to `/api/generate` -> Backend validates payload -> Selects the correct prompt template (Generate/Explain/Debug) -> Injects user prompt into template -> Sends authenticated request to Hugging Face API -> Receives raw Markdown string -> Sends JSON back to client -> Client parses Markdown into sections (Code, Explanation) -> Renders UI."
+
+### B. Frontend & Technical Implementation
+
+**Q4: How do you handle the AI's response which is just a large block of text?**
+*   **Answer:** "This was a key challenge. We enforce a **structured response format** via Prompt Engineering. We instruct the LLM to wrap code in specific markdown blocks (e.g., `Start Code`, `End Code`). On the frontend, I wrote a parser using regex and string manipulation to split this single markdown string into distinct UI components—separating the explanation text from the code blocks so users can interact with them individually (copy, view)."
+
+**Q5: What library are you using for markdown rendering and why?**
+*   **Answer:** "I used `react-markdown` along with `rehype-highlight`. `react-markdown` is safe (prevents XSS by default) and flexible component mapping, allowing us to swap standard HTML elements for custom React components if needed. `rehype-highlight` provides the syntax highlighting for the code blocks, which is essential for a developer tool."
+
+**Q6: This project uses Tailwind CSS. What are the pros and cons you faced?**
+*   **Answer:** "**Pros:** Rapid development, consistent design tokens (padding, colors), and no context switching between CSS files and JS files. **Cons:** Class names can get very long and cluttered in the JSX. To mitigate this, I used utility functions (like `cn` from `clsx` and `tailwind-merge`) to conditionally apply classes and keep the code cleaner."
+
+### C. Backend & API
+
+**Q7: How do you secure your API keys?**
+*   **Answer:** "The Hugging Face API key is stored in a `.env.local` file and accessed via `process.env` only in the Server-Side API routes ([pages/api/generate.ts](file:///e:/genai-codegen-assistant-main/pages/api/generate.ts)). It is never exposed to the client-side bundle. The frontend only calls my internal API endpoint, which acts as a secure proxy."
+
+**Q8: What happens if the AI model is down or times out?**
+*   **Answer:** "I implemented error handling in the API route. If the external fetch to Hugging Face fails (non-200 status or timeout), the API catches the exception and returns a structured 500 error response to the frontend. The frontend then displays a user-friendly toast notification or error message instead of crashing the application."
+
+**Q9: Why use the `@huggingface/inference` library over standard `fetch`?**
+*   **Answer:** "While `fetch` works, the official library provides strong typing for inputs/outputs, handles retries automatically for some errors, and abstracts away the boilerplate of setting headers and parsing streams. It makes the code more improved and maintainable."
+
+### D. Scenario & Behavioral
+
+**Q10: If you had to scale this to 10,000 users, what would break first?**
+*   **Answer:** "The primary bottleneck would be the **Rate Limits** on the specific Hugging Face model API.
+    *   **Fix:** We would need to implement caching for identical prompts (using Redis) to save API calls.
+    *   **Fix:** We would likely need to upgrade to a paid inference endpoint or deploy our own model instance on AWS SageMaker/Lambda to handle the concurrency without queuing."
+
+**Q11: The AI sometimes "hallucinates" or gives wrong code. How do you mitigate that?**
+*   **Answer:** "That's an inherent LLM risk. I mitigate it through **System Prompting**. In [templates.ts](file:///e:/genai-codegen-assistant-main/lib/templates.ts), I treat the 'system' role strictly, adding constraints like 'Do not create fake libraries', 'If unsure, admit it', and enforcing a 'Chain of Thought' structure where the model explains its logic before generating code, which historically improves accuracy."
+
+**Q12: What was the hardest bug you solved in this project?**
+*   **Answer:** "The hardest issue was **parsing the broken markdown streaming**. Sometimes the AI stops generating mid-code-block due to token limits.
+    *   **Solution:** I implemented a robust parser that checks for unclosed code fences (```) and manually closes them before rendering to prevent the entire UI from breaking layout."
+
+---
+## Summary for Interview Success
+
+*   **Be Confident:** You built a Full-Stack AI application. That is impressive.
+*   **Know the Flow:** Can you draw the diagram on a whiteboard? (Practice the diagram above).
+*   **Backend Framing:** Emphasize that while it's currently serverless (perfect for MVP), you know *exactly* how to add a database (Supabase) for the production version.

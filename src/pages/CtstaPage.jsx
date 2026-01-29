@@ -113,41 +113,31 @@ function CtstaPage() {
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                         <Link
-                            to="/tcsinter"
+                            to="/"
                             style={{
                                 padding: isMobile ? '8px 12px' : '10px 16px',
                                 fontSize: isMobile ? '11px' : '13px',
                                 fontWeight: '600',
                                 borderRadius: '8px',
-                                backgroundColor: '#7c3aed',
+                                backgroundColor: '#0f172a',
                                 color: 'white',
                                 textDecoration: 'none',
-                                transition: 'all 0.2s ease'
+                                transition: 'all 0.2s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
                             }}
                         >
-                            TCS Prep
-                        </Link>
-                        <Link
-                            to="/barcoa"
-                            style={{
-                                padding: isMobile ? '8px 12px' : '10px 16px',
-                                fontSize: isMobile ? '11px' : '13px',
-                                fontWeight: '600',
-                                borderRadius: '8px',
-                                backgroundColor: '#18181b',
-                                color: 'white',
-                                textDecoration: 'none',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            ← BARC
+                            <span>Home</span>
                         </Link>
                     </div>
+
                 </div>
-            </header>
+            </header >
 
             {/* Module Tabs */}
-            <div style={{ backgroundColor: '#cffafe', borderBottom: '1px solid #a5f3fc', padding: isMobile ? '8px 12px' : '12px 24px' }}>
+            < div style={{ backgroundColor: '#cffafe', borderBottom: '1px solid #a5f3fc', padding: isMobile ? '8px 12px' : '12px 24px' }
+            }>
                 <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
                     {modules.map(module => (
                         <span
@@ -165,10 +155,10 @@ function CtstaPage() {
                         </span>
                     ))}
                 </div>
-            </div>
+            </div >
 
             {/* Category Navigation */}
-            <nav style={{ backgroundColor: 'white', borderBottom: '1px solid #a5f3fc', position: 'sticky', top: 0, zIndex: 10 }}>
+            < nav style={{ backgroundColor: 'white', borderBottom: '1px solid #a5f3fc', position: 'sticky', top: 0, zIndex: 10 }}>
                 <div style={{ maxWidth: '1000px', margin: '0 auto', padding: isMobile ? '12px' : '16px 24px' }}>
                     <div style={{ display: 'flex', gap: isMobile ? '8px' : '12px', overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: '4px' }}>
                         {ctstaTopics.map((topic) => (
@@ -194,10 +184,10 @@ function CtstaPage() {
                         ))}
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             {/* Questions List */}
-            <main style={{ flex: 1, overflowY: 'auto' }}>
+            < main style={{ flex: 1, overflowY: 'auto' }}>
                 <div style={{ maxWidth: '800px', margin: '0 auto', padding: isMobile ? '24px 12px' : '48px 24px' }}>
                     <div style={{ textAlign: 'center', marginBottom: isMobile ? '24px' : '40px' }}>
                         <span style={{
@@ -230,8 +220,8 @@ function CtstaPage() {
                         ))}
                     </div>
                 </div>
-            </main>
-        </div>
+            </main >
+        </div >
     );
 }
 

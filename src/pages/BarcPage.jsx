@@ -159,34 +159,22 @@ function BarcPage() {
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
                         <Link
-                            to="/ctsta"
+                            to="/"
                             style={{
                                 padding: isMobile ? '8px 12px' : '10px 16px',
                                 fontSize: isMobile ? '11px' : '13px',
                                 fontWeight: '600',
                                 borderRadius: '8px',
-                                backgroundColor: '#0891b2',
+                                backgroundColor: '#0f172a',
                                 color: 'white',
                                 textDecoration: 'none',
-                                transition: 'all 0.2s ease'
+                                transition: 'all 0.2s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
                             }}
                         >
-                            Cognizant →
-                        </Link>
-                        <Link
-                            to="/tcsinter"
-                            style={{
-                                padding: isMobile ? '8px 12px' : '10px 16px',
-                                fontSize: isMobile ? '11px' : '13px',
-                                fontWeight: '600',
-                                borderRadius: '8px',
-                                backgroundColor: '#7c3aed',
-                                color: 'white',
-                                textDecoration: 'none',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            TCS →
+                            <span>Home</span>
                         </Link>
                     </div>
                 </div>

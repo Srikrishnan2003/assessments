@@ -1,0 +1,135 @@
+# Interview Preparation: Charge Management System
+
+## 1. System Architecture
+
+The Charge Management System is a centralized billing platform for a bank, designed to calculate charges based on customer transactions and defined rules. It follows a **Microservices-ready Monolithic Architecture** with a decoupling of Frontend and Backend.
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph Client Layer
+        Browser[Web Browser (React Client)]
+    end
+
+    subgraph "API Gateway / Load Balancer (Conceptual)"
+        LB[Nginx / AWS ALB]
+    end
+
+    subgraph "Application Layer (Spring Boot)"
+        Controller[REST Controllers]
+        Service[Service Layer (Business Logic)]
+        Security[Spring Security (JWT + OAuth2)]
+        RuleEngine[Rule Engine (JSON Logic)]
+    end
+
+    subgraph "Data Layer"
+        DB[(MySQL Database)]
+    end
+
+    Browser -->|HTTPS / REST API| Controller
+    Controller --> Service
+    Service --> RuleEngine
+    Service --> Repo[JPA Repositories]
+    Repo --> DB
+    Security -.->|Filter Chain| Controller
+```
+
+### Tech Stack
+*   **Frontend**: React.js 19, Bootstrap 5, Tailwind CSS, Axios.
+*   **Backend**: Java 21, Spring Boot 3.5.5.
+*   **Database**: MySQL 8.0.
+*   **Security**: Spring Security, JWT, OAuth2 Resource Server.
+*   **Tools**: Maven, Git, Postman.
+
+---
+
+## 2. Backend Architecture Framing
+
+When asked about the backend, frame your answer to highlight **Scalability**, **Flexibility**, and **Security**.
+
+**Key Talking Points:**
+
+1.  **Layered Architecture**:
+    *   We follow a standard Controller-Service-Repository pattern.
+    *   **Controller**: Handles HTTP requests, validation (`@Valid`), and response formatting.
+    *   **Service**: Contains business logic, specifically the *Rule Engine* logic.
+    *   **Repository**: Uses Spring Data JPA for specialized DB access.
+
+2.  **Flexible Rule Engine (The "Star" Feature)**:
+    *   "Instead of hardcoding charges, we built a flexible **Rule Engine**."
+    *   We store conditions as **JSON** in the `charge_rules` table (`conditions_json`).
+    *   This allows us to support complex rules like "If ATM withdrawal count > 5 AND Bank = 'Other', charge 10%" without changing code.
+    *   We use `Jackson` to parse these JSON rules at runtime and apply them to transactions.
+
+3.  **Database Design**:
+    *   **Relational Integrity**: We use MySQL with strict Foreign Keys to ensure data consistency between Transactions, Customers, and Charges.
+    *   **Audit Trail**: A dedicated `audit_log` table tracks *who* changed *what* (critical for banking compliance).
+    *   **Performance**: Indexes on high-frequency columns (`rule_code`, `status`, `transaction_date`).
+
+4.  **Security**:
+    *   Implemented **JWT (JSON Web Token)** for stateless authentication.
+    *   Role-Based Access Control (RBAC) with roles: `ADMIN`, `RULE_CREATOR`, `RULE_APPROVER`, `RULE_VIEWER`.
+    *   This enforces the **Maker-Checker principle** (one person creates a rule, another approves it).
+
+---
+
+## 3. Interview Questions & Answers
+
+### A. Project-Specific Questions
+
+**Q1: What was the most challenging part of this project?**
+*   **Answer**: "Implementing the dynamic Charge Rule Engine. We needed to support various charge types (Flat, Percentage, Tiered) based on dynamic conditions (Atm count, account type). Storing these conditions as JSON in a SQL database gave us the flexibility of NoSQL while keeping the relational integrity of MySQL. Parsing and evaluating these conditions efficiently in Java was a key challenge we solved using the factory pattern for different rule types."
+
+**Q2: How do you handle high volumes of transactions?**
+*   **Answer**: "Currently, it handles transactions synchronously. For high scale, I would decouple the 'Transaction Ingestion' from 'Charge Calculation'. We could use a message queue (Kafka/RabbitMQ) to push transactions, and a separate 'Calculation Service' consumer to process charges asynchronously, ensuring zero latency for the user."
+
+**Q3: Explain the Maker-Checker principle in your app.**
+*   **Answer**: "In banking, a single person shouldn't define and activate fees. We implemented a workflow where a `RULE_CREATOR` creates a rule (Status: DRAFT). It stays inactive until a `RULE_APPROVER` reviews and approves it (Status: ACTIVE). This prevents fraud and errors."
+
+### B. Technical Questions (Backend - Java/Spring)
+
+**Q4: Why Spring Boot over Node.js for this project?**
+*   **Answer**: "Banking systems require strict type safety, transaction management (`@Transactional`), and robust multi-threading which Java excels at. Spring Boot provides production-ready features like Security and JPA out of the box, reducing boilerplate compared to Express.js."
+
+**Q5: How does your JWT authentication work?**
+*   **Answer**: "On login, the server verifies credentials and issues a signed JWT containing the user's roles. The Client sends this token in the `Authorization` header (`Bearer <token>`). A Spring Security Filter intercepts every request, validates the signature, and sets the SecurityContext, allowing stateless auth."
+
+**Q6: What is a `@Transactional` annotation?**
+*   **Answer**: "It ensures that a series of database operations either all succeed or all fail. For example, when settling charges, we update the `settlement_request` status and individual `charge_calculations` entries. If one fails, the entire operation rolls back to prevent data inconsistency."
+
+### C. Technical Questions (Frontend - React)
+
+**Q7: How do you handle State Management?**
+*   **Answer**: "We use React's built-in Context API for global state like 'User Auth' and 'Theme', and local state (`useState`, `useReducer`) for form handling. Since the app is dashboard-heavy, we rely on efficient API data fetching (using Axios interceptors) rather than heavy client-side stores like Redux."
+
+**Q8: How did you handle the Rule Creation Form?**
+*   **Answer**: "It's a dynamic form. Depending on the 'Fee Type' selected (Flat vs Percentage), the input fields change. We used `react-hook-form` to manage this complex validation logic and ensure performance by minimizing re-renders."
+
+### D. MySQL & Database Questions
+
+**Q9: Why use JSON type in a SQL database?**
+*   **Answer**: "Standard SQL columns are rigid. Our rule conditions change frequently (e.g., 'Min Amount', 'Time of Day', 'Channel'). Using a JSON column for `conditions` allows us to add new condition parameters without altering the schema (ALTER TABLE), giving us hybrid SQL/NoSQL capabilities."
+
+**Q10: Explain the relationships in your database.**
+*   **Answer**: "It's a star-like schema. `Transactions` is the central fact table. It links to `Customers`. `Charge_Calculations` links `Transactions` to `Charge_Rules`. `Settlement_Requests` aggregates multiple `Calculations`. All sensitive changes generate rows in `Audit_Log`."
+
+### E. Advanced Scenario-Based Questions
+
+**Q11: How do you prevent Double Charging (Idempotency)?**
+*   **Answer**: "We enforce idempotency using the `transaction_id` from the source system. In the `transactions` table, `transaction_id` is a UNIQUE key. If the upstream system retries sending the same transaction due to a network timeout, our DB returns a constraint violation (or we handle it gracefully in the Service layer), ensuring the customer is never charged twice for the same event."
+
+**Q12: What happens if a Rule changes today? Do past charges update?**
+*   **Answer**: "No. We designed the system for immutability of history. When a rule is updated, we actually soft-delete the old rule (or version it) and create a new one. `Charge_Calculations` links to the specific `Rule_ID` that was active *at the time of calculation*. This ensures that historical data remains accurate to what was true at that moment, even if rules change later."
+
+**Q13: How would you handle Currency Conversion?**
+*   **Answer**: "Currently, the schema supports `currency_code`. If we charge in USD for an INR transaction, we would need a `ExchangeRateService`. In the `Charge_Calculation` logic, before applying the rule, we would normalize the amount using the daily exchange rate fetch from an external API (like Bloomberg/Fixer) and store the conversion rate used in the metadata for audit purposes."
+
+**Q14: Explain your Exception Handling strategy.**
+*   **Answer**: "We use a Global Exception Handler (`@ControllerAdvice`). Instead of try-catch blocks everywhere, we let exceptions bubble up. The Advisor catches specific exceptions (e.g., `RuleNotFoundException`, `InsufficientFundsException`) and transforms them into a standardized API Error Response (JSON with clean error codes and user-friendly messages), keeping our controllers clean."
+
+**Q15: How do you handle CORS and CSRF?**
+*   **Answer**: "Since frontend and backend are on different origins (e.g., localhost:3000 vs localhost:8080), we configured `CorsConfigurationSource` in Spring Security to allow specific origins. For CSRF, since we use stateless JWTs and not session cookies, we typically disable CSRF protection as it's primarily a risk for cookie-based sessions, though we ensure strict `SameSite` cookie policies if cookies were used."
+
+**Q16: How do you optimize the `active_rules_view`?**
+*   **Answer**: "The view filters for `status='ACTIVE'` and `effective_date`. To optimize this, we placed a composite index on `(status, effective_from, effective_to)` in the `charge_rules` table. This allows the database to fetch active rules directly from the index without scanning the full table."
